@@ -89,11 +89,11 @@ export default {
         isResume: false,
         resumeGame: false
     }),
-    beforeMount() {
-        if (localStorage.getItem(1)) {
-            this.isResume = true;
-        }
-    },
+    // beforeMount() {
+    //     if (localStorage.getItem(1)) {
+    //         this.isResume = true;
+    //     }
+    // },
     methods: {
         play(resumeGame) {
             if (resumeGame) {

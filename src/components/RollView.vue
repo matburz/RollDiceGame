@@ -11,12 +11,7 @@
                 <v-toolbar color="primary">
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        <v-btn
-                            tile
-                            color="primary"
-                            dark
-                            @click="close(true)"
-                        >
+                        <v-btn tile color="primary" dark @click="close(true)">
                             Close
                             <v-icon>close</v-icon>
                         </v-btn>
@@ -313,7 +308,8 @@ export default {
         historyItems: [],
         decision: "",
         result: "",
-        classText: ""
+        classText: "",
+        url: "http://roll.diceapi.com/json/d6"
     }),
     watch: {
         async dialog() {
@@ -363,9 +359,18 @@ export default {
             }
         },
         async fetchData() {
-            let number = await this.generateNumber();
-            let url = "http://roll.diceapi.com/json/d" + number;
-            await fetch(url, {})
+            // do wyrzucenia generateNumber() oraz modyfikacja reszty usług
+            await this.generateRoll();
+            this.diceIconGet(this.nextRoll);
+        },
+        diceIconGet(number) {
+            this.diceUrl =
+                "http://roll.diceapi.com/images/poorly-drawn/d6/" +
+                number +
+                ".png";
+        },
+        async generateRoll() {
+            await fetch(this.url, {})
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -384,20 +389,10 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
-            this.diceIconGet(number);
-        },
-        diceIconGet(number) {
-            this.diceUrl =
-                "http://roll.diceapi.com/images/poorly-drawn/d6/" +
-                number +
-                ".png";
-        },
-        generateNumber() {
-            this.nextRoll = Math.floor(Math.random() * 6) + 1;
+            this.nextRoll = this.dice.value;
             if (this.nextRoll == this.previousRoll) {
-                this.generateNumber();
+                this.generateRoll();
             }
-            return this.nextRoll;
         },
         roll(isLower) {
             if (this.round <= 30) {
